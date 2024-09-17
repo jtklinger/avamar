@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File containing the list of retired clients
-input_file="20240913-RetiredList.csv"
+input_file="YOUR_FILENAME_HERE"
 
 # Log file for the deletion process
 log_file="client_deletion_log.txt"
