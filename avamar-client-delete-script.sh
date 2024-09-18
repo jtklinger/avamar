@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File containing the list of retired clients
-input_file="YOUR_FILENAME_HERE"
+input_file="20240913-RetiredList.csv"
 
 # Log file for the deletion process
 log_file="client_deletion_log.txt"
@@ -9,10 +9,9 @@ log_file="client_deletion_log.txt"
 # Function to delete a client
 delete_client() {
     local client_name="$1"
-    local domain="$2"
     
     echo "Deleting client: $client_name" | tee -a "$log_file"
-    mccli client delete --name="$client_name" --domain="$domain" >> "$log_file" 2>&1
+    mccli client delete --name="$client_name" --domain="/MC_RETIRED" >> "$log_file" 2>&1
     
     if [ $? -eq 0 ]; then
         echo "Successfully deleted client: $client_name" | tee -a "$log_file"
@@ -26,18 +25,18 @@ delete_client() {
 echo "Starting client deletion process..." | tee "$log_file"
 echo "----------------------------------------" >> "$log_file"
 
-# Skip the header line and process each client
-tail -n +2 "$input_file" | while IFS=',' read -r client domain client_type; do
+# Process each client in the file
+while IFS= read -r line; do
+    # Extract client name up to the first space
+    client=$(echo "$line" | cut -d' ' -f1)
+    
     # Remove any leading/trailing whitespace
     client=$(echo "$client" | xargs)
-    domain=$(echo "$domain" | xargs)
     
-    # Check if the domain is empty or /, use / as the default
-    if [ -z "$domain" ] || [ "$domain" = "/" ]; then
-        domain="/"
+    # Skip empty lines
+    if [ -n "$client" ]; then
+        delete_client "$client"
     fi
-    
-    delete_client "$client" "$domain"
-done
+done < "$input_file"
 
 echo "Client deletion process completed. Please check $log_file for details."
