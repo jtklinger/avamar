@@ -1,0 +1,9 @@
+##Checking the Avamar License File
+- Logged in as admin, run "avmaint license --avamaronly"
+##Applying the Avamar License File
+- Transfer the Avamar license file to the Avamar Server's "/tmp" directory
+- Move the license file to the correct location using the command mv /tmp/xxxx.lic /usr/local/avamar/etc/license.lic
+- Update the license file's permissions and ownership using the command chmod 644 /usr/local/avamar/etc/license.lic
+- Apply the license using the command "avmaint license /usr/local/avamar/etc/license.lic --ava"
+-- If avmaint command isn't found, make sure you are running as admin from the /tmp directory
+- Verify the license was applied successfully using the command "avmaint license --avamaronly"
